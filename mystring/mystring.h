@@ -15,6 +15,9 @@
  */
 class mystring {
 public:
+    /** @brief 表示“未找到”的位置常量，等价于 (size_t)-1。 */
+    static const size_t npos = static_cast<size_t>(-1);
+
     /** @brief 构造空字符串，size() 为 0。 */
     mystring();
 
@@ -61,6 +64,30 @@ public:
      * @return 拼接结果的新对象。
      */
     mystring operator+(const mystring &other) const;
+
+    /**
+     * @brief 字符串匹配：查找子串 @p pattern 在当前字符串中首次出现的位置。
+     * @param pattern 要查找的子串；空串视为在任意位置都能匹配。
+     * @param from 起始查找位置（下标从 0 开始）。
+     * @return 首次匹配处的下标；未找到时返回 @c npos。
+     * @note 空串在 @p from 处匹配（当 @p from 不超过 size() 时返回 @p from）。
+     */
+    size_t find(const mystring &pattern, size_t from = 0) const;
+
+    /**
+     * @brief 字符串匹配：查找 C 风格子串 @p pattern 在当前字符串中首次出现的位置。
+     * @param pattern 以 '\0' 结尾的子串；传入 @c nullptr 视为空串。
+     * @param from 起始查找位置（下标从 0 开始）。
+     * @return 首次匹配处的下标；未找到时返回 @c npos。
+     */
+    size_t find(const char *pattern, size_t from = 0) const;
+
+    /**
+     * @brief 判断当前字符串是否包含子串 @p pattern。
+     * @param pattern 要查找的子串。
+     * @return 包含返回 @c true，否则返回 @c false。
+     */
+    bool contains(const mystring &pattern) const;
 
     /**
      * @brief 获取底层的 C 风格字符串。
