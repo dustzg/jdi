@@ -69,6 +69,41 @@ mystring mystring::operator+(const mystring &other) const {
     return result;
 }
 
+// 字符串匹配：查找子串 pattern 首次出现的位置，未找到返回 npos
+size_t mystring::find(const mystring &pattern, size_t from) const {
+    // 空串在 from 处匹配（from 不超过 size_ 时返回 from）
+    if (pattern.size_ == 0) {
+        return from <= size_ ? from : npos;
+    }
+    // 模式比剩余字符多则不可能匹配
+    if (from > size_ || pattern.size_ > size_ - from) {
+        return npos;
+    }
+    // 朴素匹配：以每个可能的起点 i 逐字符比较
+    for (size_t i = from; i <= size_ - pattern.size_; ++i) {
+        size_t j = 0;
+        // 从起点 i 开始比较，直到失配或匹配完整个模式
+        while (j < pattern.size_ && data_[i + j] == pattern.data_[j]) {
+            ++j;
+        }
+        // j 走完整个模式说明在 i 处完整匹配
+        if (j == pattern.size_) {
+            return i;
+        }
+    }
+    return npos;
+}
+
+// 字符串匹配：C 风格子串重载，转成 mystring 后复用上面的查找逻辑
+size_t mystring::find(const char *pattern, size_t from) const {
+    return find(mystring(pattern), from);
+}
+
+// 是否包含子串 pattern
+bool mystring::contains(const mystring &pattern) const {
+    return find(pattern) != npos;
+}
+
 const char *mystring::c_str() const {
     return data_;
 }
