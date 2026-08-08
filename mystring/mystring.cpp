@@ -79,12 +79,14 @@ size_t mystring::find(const mystring &pattern, size_t from) const {
     if (from > size_ || pattern.size_ > size_ - from) {
         return npos;
     }
-    // 朴素匹配：逐个起点尝试逐字符比较
+    // 朴素匹配：以每个可能的起点 i 逐字符比较
     for (size_t i = from; i <= size_ - pattern.size_; ++i) {
         size_t j = 0;
+        // 从起点 i 开始比较，直到失配或匹配完整个模式
         while (j < pattern.size_ && data_[i + j] == pattern.data_[j]) {
             ++j;
         }
+        // j 走完整个模式说明在 i 处完整匹配
         if (j == pattern.size_) {
             return i;
         }
@@ -92,6 +94,7 @@ size_t mystring::find(const mystring &pattern, size_t from) const {
     return npos;
 }
 
+// 字符串匹配：C 风格子串重载，转成 mystring 后复用上面的查找逻辑
 size_t mystring::find(const char *pattern, size_t from) const {
     return find(mystring(pattern), from);
 }
